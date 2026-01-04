@@ -1,0 +1,27 @@
+name: CLOMonitor Lint
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  clomonitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run CLOMonitor linter
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/repo" \
+            -e GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} \
+            ghcr.io/cncf/clomonitor/linter \
+            clomonitor-linter \
+              --path /repo \
+              --url https://github.com/hddbang/Qwen
